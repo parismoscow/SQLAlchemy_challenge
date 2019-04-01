@@ -58,11 +58,12 @@ def precipitation():
     year_ago = max_date_dt - dt.timedelta(days=365)
     year_ago_str = year_ago.strftime("%Y-%m-%d")[0]
     prcp = session.query(*sel).\
-    filter(Measurement.date >= year_ago_str).\
-    order_by(Measurement.date).statement
+       filter(Measurement.date >= year_ago_str).\
+       order_by(Measurement.date).\
+       all()
     p_dict = dict(prcp)
-    print()
-    print("Results for Precipitation")
+    #print()
+    #print("Results for Precipitation")
     return jsonify(p_dict)
 
 @app.route("/api/v1.0/stations")
@@ -105,6 +106,7 @@ def start_end(start_date, end_date):
        result = session.query(*sel).\
               filter(Measurement.date >= '2015-06-15').\
               filter(Measurement.date <= '2015-06-30').\
+              group_by(Measurement.date).\
               all()
        
        return jsonify(result)
